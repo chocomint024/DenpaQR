@@ -56,9 +56,9 @@
 </head>
 <body>
     <h2>電波人間用QRコード自動生成ツール</h2>
-    <input type="number" id="stringLength" placeholder="文字列の長さを入力 (1-493)" min="1" max="493" value="16" />
+    <input type="number" id="stringLength" placeholder="文字列の長さを入力 (1-493)" min="1" max="493" value="126" />
     <button onclick="generateQRCode()">QRコードを生成</button>
-    <div class="description">※数字が大きすぎると出現する個体は増えますがAndroidとiOSで個体が異なる可能性があります。</div>
+    <div class="description">※126より大きい数だと湧く数は増えますがAndroidとiOSで個体が異なります。</div>
     
     <div id="qrcode"></div>
     <div id="generatedString"></div>
