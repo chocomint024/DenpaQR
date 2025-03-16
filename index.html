@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電波人間用QRコード自動生成ツール</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #qrcode {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #generatedString {
+            margin-top: 10px;
+            font-size: 18px;
+            word-wrap: break-word; /* 長い文字列を折り返す */
+        }
+        #saveButton {
+            margin-top: 10px;
+            display: none;
+        }
+        .description {
+            font-size: 12px;
+            color: gray;
+            margin-top: 10px; /* ボタンの下にマージンを追加 */
+        }
+        .checkboxes {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .checkboxes div {
+            margin: 10px 0; /* 各カテゴリの間にマージンを追加 */
+        }
+    </style>
+</head>
+<body>
+    <h2>電波人間用QRコード自動生成ツール</h2>
+    <input type="number" id="stringLength" placeholder="文字列の長さを入力 (1-493)" min="1" max="493" value="16" />
+    <button onclick="generateQRCode()">QRコードを生成</button>
+    <div class="description">※数字が大きすぎると出現する個体は増えますがAndroidとiOSで個体が異なる可能性があります。</div>
+    
+    <div id="qrcode"></div>
+    <div id="generatedString"></div>
+
+    <div class="checkboxes">
+        <div>
+            <strong>回避率</strong><br>
+            <label><input type="checkbox" value="回避0"> 回避0</label>
+            <label><input type="checkbox" value="回避3+"> 回避3+</label>
+            <label><input type="checkbox" value="回避3-"> 回避3-</label>
+            <label><input type="checkbox" value="回避6"> 回避6</label>
+            <label><input type="checkbox" value="回避10"> 回避10</label>
+            <label><input type="checkbox" value="回避15"> 回避15</label>
+        </div>
+        <div>
+            <strong>体格</strong><br>
+            <label><input type="checkbox" value="最速"> 最速</label>
+            <label><input type="checkbox" value="最大"> 最大</label>
+        </div>
+        <div>
+            <strong>色</strong><br>
+            <label><input type="checkbox" value="黒"> 黒</label>
+            <label><input type="checkbox" value="赤"> 赤</label>
+            <label><input type="checkbox" value="青"> 青</label>
+            <label><input type="checkbox" value="黄"> 黄</label>
+            <label><input type="checkbox" value="橙"> 橙</label>
+            <label><input type="checkbox" value="緑"> 緑</label>
+            <label><input type="checkbox" value="水"> 水</label>
+            <label><input type="checkbox" value="紫"> 紫</label>
+            <label><input type="checkbox" value="白"> 白</label>
+        </div>
+        <div>
+            <strong>頭</strong><br>
+            <label><input type="checkbox" value="横楕円"> 横楕円</label>
+            <label><input type="checkbox" value="石鹼"> 石鹼</label>
+            <label><input type="checkbox" value="丸"> 丸</label>
+            <label><input type="checkbox" value="三角"> 三角</label>
+            <label><input type="checkbox" value="四角"> 四角</label>
+            <label><input type="checkbox" value="縦楕円"> 縦楕円</label>
+        </div>
+        <div>
+            <strong>アンテナ</strong><br>
+            <label><input type="checkbox" value="よけにくい"> よけにくい</label>
+            <label><input type="checkbox" value="ノクダ"> ノクダ</label>
+            <label><input type="checkbox" value="治す"> 治す</label>
+            <label><input type="checkbox" value="興奮"> 興奮</label>
+            <label><input type="checkbox" value="足元ガード"> 足元ガード</label>
+            <label><input type="checkbox" value="遅くなれ"> 遅くなれ</label>
+            <label><input type="checkbox" value="速くなれ"> 速くなれ</label>
+            <label><input type="checkbox" value="無敵"> 無敵</label>
+            <label><input type="checkbox" value="単体火"> 単体火</label>
+            <label><input type="checkbox" value="単体水"> 単体水</label>
+            <label><input type="checkbox" value="単体電気"> 単体電気</label>
+            <label><input type="checkbox" value="単体土"> 単体土</label>
+            <label><input type="checkbox" value="単体風"> 単体風</label>
+            <label><input type="checkbox" value="単体氷"> 単体氷</label>
+            <label><input type="checkbox" value="単体闇"> 単体闇</label>
+            <label><input type="checkbox" value="単体光"> 単体光</label>
+            <label><input type="checkbox" value="3体火"> 3体火</label>
+            <label><input type="checkbox" value="3体水"> 3体水</label>
+            <label><input type="checkbox" value="3体電気"> 3体電気</label>
+            <label><input type="checkbox" value="3体土"> 3体土</label>
+            <label><input type="checkbox" value="3体風"> 3体風</label>
+            <label><input type="checkbox" value="3体氷"> 3体氷</label>
+        </div>
+        <div>
+            <strong>特徴</strong><br>
+            <label><input type="checkbox" value="顔素材"> 顔素材</label>
+            <label><input type="checkbox" value="かわいい"> かわいい</label>
+            <label><input type="checkbox" value="かっこいい"> かっこいい</label>
+            <label><input type="checkbox" value="髪素材"> 髪素材</label>
+            <label><input type="checkbox" value="眉素材"> 眉素材</label>
+            <label><input type="checkbox" value="目素材"> 目素材</label>
+            <label><input type="checkbox" value="鼻素材"> 鼻素材</label>
+            <label><input type="checkbox" value="口素材"> 口素材</label>
+            <label><input type="checkbox" value="顔色素材"> 顔色素材</label>
+        </div>
+    </div>
+
+    <button id="saveButton" style="display: none;" onclick="saveQRCode()">QRコード画像を保存</button>
+
+    <script>
+        let qrCodeElement;
+
+        function generateQRCode() {
+            // ユーザーが入力した文字列の長さを取得
+            const maxLength = parseInt(document.getElementById("stringLength").value);
+            if (isNaN(maxLength) || maxLength < 1 || maxLength > 493) {
+                alert("1から493の範囲で文字列の長さを入力してください。");
+                return;
+            }
+
+            // 最大lengthのランダムな文字列を生成
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let randomString = '';
+            for (let i = 0; i < maxLength; i++) {
+                randomString += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            
+            // QRコードエリアをクリア
+            document.getElementById("qrcode").innerHTML = "";
+            document.getElementById("generatedString").innerHTML = "";
+
+            // QRコードを生成
+            qrCodeElement = document.createElement("div");
+            const qrCodeSize = 400; // QRコードのサイズを固定
+            new QR
