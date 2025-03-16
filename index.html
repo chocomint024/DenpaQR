@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -44,7 +44,7 @@
             flex: 1 1 auto; /* 幅を自動調整 */
             min-width: 120px; /* 最小幅を設定 */
         }
-        
+
         @media (max-width: 600px) {
             .selectGroup div {
                 margin-right: 0; /* マージンをリセット */
@@ -119,6 +119,9 @@
             <strong>アンテナ</strong>
             <select id="antennaSelect">
                 <option value="">選択してください</option>
+                <option value="アンテナなし">アンテナなし</option>
+                <option value="ふっかつ">ふっかつ</option>
+                <option value="かいふく">かいふく</option>
                 <option value="むてき">むてき</option>
                 <option value="よけにくい">よけにくい</option>
                 <option value="ノックダウン">ノックダウン</option>
@@ -132,10 +135,12 @@
                 <option value="はやくなれ">はやくなれ</option>
                 <option value="つよくなれ">つよくなれ</option>
                 <option value="かたくなれ">かたくなれ</option>
+                <option value="かわしやすい">かわしやすい</option>
                 <option value="どくになれ">どくになれ</option>
                 <option value="めかくし">めかくし</option>
                 <option value="しびれさせる">しびれさせる</option>
                 <option value="ねむらせる">ねむらせる</option>
+                <option value="げどく">げどく</option>
                 <option value="しびれとる">しびれとる</option>
                 <option value="めざめる">めざめる</option>
                 <option value="単体火">単体火</option>
@@ -152,6 +157,9 @@
                 <option value="3体土">3体土</option>
                 <option value="3体風">3体風</option>
                 <option value="3体氷">3体氷</option>
+                <option value="3体風">3体闇</option>
+                <option value="3体風">3体光</option>
+                
             </select>
         </div>
         <div>
@@ -206,6 +214,27 @@
                 height: qrCodeSize // 高さを固定
             });
             document.getElementById("qrcode").appendChild(qrCodeElement);
+
+            // QRコードに白い余白を追加するためのCanvasを作成
+            const canvas = qrCodeElement.querySelector("canvas");
+            if (canvas) {
+                const ctx = canvas.getContext("2d");
+                const whiteBorderSize = 30; // 白い余白のサイズ
+                const borderedCanvas = document.createElement("canvas");
+                borderedCanvas.width = qrCodeSize + whiteBorderSize * 2; // 余白を考慮した幅
+                borderedCanvas.height = qrCodeSize + whiteBorderSize * 2; // 余白を考慮した高さ
+                const borderedCtx = borderedCanvas.getContext("2d");
+
+                // 白い背景を描画
+                borderedCtx.fillStyle = "white";
+                borderedCtx.fillRect(0, 0, borderedCanvas.width, borderedCanvas.height);
+                // QRコードを中央に描画
+                borderedCtx.drawImage(canvas, whiteBorderSize, whiteBorderSize, qrCodeSize, qrCodeSize);
+
+                // 新しいCanvasをQRコードエリアに追加
+                qrCodeElement.innerHTML = ""; // 以前のQRコードをクリア
+                qrCodeElement.appendChild(borderedCanvas);
+            }
 
             // 生成した文字列を表示
             document.getElementById("generatedString").innerHTML = "生成した文字列: " + randomString;
