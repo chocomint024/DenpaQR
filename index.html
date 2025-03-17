@@ -11,11 +11,12 @@
             text-align: center;
             margin: 20px;
         }
-        #qrcode {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%; /* 横幅を100%に */
+        #qrcode canvas {
+            width: 100% !important;
+            max-width: 400px; /* 必要に応じて調整 */
+            height: auto !important;
+        }
+
         }
 
         #generatedString {
