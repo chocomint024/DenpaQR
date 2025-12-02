@@ -207,7 +207,14 @@
     <button id="saveButton" style="display: none;" onclick="saveQRCode()">QRコード画像を保存</button>
     <div class="description" id="saveDescription" style="display: none;">※選択肢を押さなくても保存できます。</div>
     <button id="physiqueTableButton" style="margin-top: 10px;" onclick="showPhysiqueTable()">体格表を表示</button>
+    <button id="historyButton" style="margin-top: 10px; margin-left: 10px;" onclick="toggleHistory()">履歴を表示</button>
     <div id="physiqueTableContainer" style="display: none; margin-top: 10px;">
+        <div id="historyContainer" style="display:none; margin-top: 10px;">
+    <h3>生成履歴</h3>
+    <div id="history" 
+        style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:10px;">
+    </div>
+</div>
     <img id="physiqueTableImage" src="https://github.com/chocomint024/DenpaQR/blob/main/%E4%BD%93%E6%A0%BC%E8%A1%A8.png?raw=true" alt="体格表" style="max-width: 100%; height: auto;">
 </div>
 
@@ -279,6 +286,7 @@
 
             // 生成した文字列を表示
             document.getElementById("generatedString").innerHTML = "生成した文字列: " + randomString;
+            addHistory(borderedCanvas.toDataURL("image/png"), randomString);
 
             // 保存ボタンを表示
             document.getElementById("saveButton").style.display = "inline";
@@ -321,7 +329,52 @@
                 document.body.removeChild(link); // リンクを削除
             }
         }
+
+// 履歴の表示切替
+function toggleHistory() {
+    const container = document.getElementById("historyContainer");
+
+    if (container.style.display === "none") {
+        container.style.display = "block";
+        document.getElementById("historyButton").innerText = "履歴を非表示";
+    } else {
+        container.style.display = "none";
+        document.getElementById("historyButton").innerText = "履歴を表示";
+    }
+}
+
+// 履歴に追加する処理
+function addHistory(imgSrc, text) {
+    const historyContainer = document.getElementById("history");
+
+    const item = document.createElement("div");
+    item.style.border = "1px solid #ccc";
+    item.style.padding = "5px";
+    item.style.background = "white";
+
+    const img = document.createElement("img");
+    img.src = imgSrc;
+    img.style.width = "100px";
+    img.style.cursor = "pointer";
+
+    img.onclick = () => {
+        const w = window.open("");
+        w.document.write(`<img src="${imgSrc}" style="width:400px;">`);
+        w.document.title = "QRコード拡大表示";
+    };
+
+    const label = document.createElement("div");
+    label.textContent = text;
+    label.style.fontSize = "10px";
+    label.style.wordBreak = "break-all";
+
+    item.appendChild(img);
+    item.appendChild(label);
+    historyContainer.appendChild(item);
+}
+
     </script>
 </body>
 </html>
+
 
