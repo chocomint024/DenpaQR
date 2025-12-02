@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>電波人間用QRコード自動生成ツール</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,59 +14,60 @@
         }
         #qrcode canvas {
             width: 100% !important;
-            max-width: 400px; /* 必要に応じて調整 */
+            max-width: 400px;
             height: auto !important;
         }
-
-        }
-
         #generatedString {
             margin-top: 10px;
             font-size: 18px;
-            word-wrap: break-word; /* 長い文字列を折り返す */
+            word-wrap: break-word;
         }
         #saveButton {
             margin-top: 10px;
             display: none;
-            padding: 10px 20px; /* ボタンの内側のパディングを追加 */
-            font-size: 16px; /* フォントサイズを大きく */
+            padding: 10px 20px;
+            font-size: 16px;
         }
         .description {
             font-size: 12px;
             color: gray;
-            margin-top: 10px; /* ボタンの下にマージンを追加 */
+            margin-top: 10px;
         }
         .selectGroup {
             display: flex;
-            justify-content: center; /* 中央に配置 */
-            flex-wrap: wrap; /* 折り返しを許可 */
+            justify-content: center;
+            flex-wrap: wrap;
             margin-top: 10px;
         }
         .selectGroup div {
-            margin-right: 20px; /* 各セレクトボックスの右にマージンを追加 */
-            flex: 1 1 auto; /* 幅を自動調整 */
-            min-width: 120px; /* 最小幅を設定 */
+            margin-right: 20px;
+            min-width: 120px;
         }
-
         @media (max-width: 600px) {
             .selectGroup div {
-                margin-right: 0; /* マージンをリセット */
-                width: 100%; /* 幅を100%に設定 */
-                margin-bottom: 10px; /* 下にマージンを追加 */
+                margin-right: 0;
+                width: 100%;
+                margin-bottom: 10px;
             }
         }
     </style>
 </head>
+
 <body>
+
     <h2>電波人間用QRコード自動生成ツール</h2>
-    <input type="number" id="stringLength" placeholder="文字列の長さを入力 (1-493)" min="1" max="493" value="126" />
+
+    <input type="number" id="stringLength" placeholder="文字列の長さ (1-493)" min="1" max="493" value="126">
     <button onclick="generateQRCode()">QRコードを生成</button>
+
     <div class="description">※ランダムでQRを生成します。意図的なQRは作れません。</div>
-    
+
     <div id="qrcode"></div>
     <div id="generatedString"></div>
-    <div id="qrCount">QRコード生成回数: 0</div> <!-- 生成回数表示用の要素 -->
 
+    <div id="qrCount">QRコード生成回数: 0</div>
+
+    <!-- 全セレクトボックス -->
     <div class="selectGroup">
         <div>
             <strong>回避率</strong>
@@ -79,6 +81,7 @@
                 <option value="回避15">回避15</option>
             </select>
         </div>
+
         <div>
             <strong>体格</strong>
             <select id="physiqueSelect">
@@ -90,6 +93,7 @@
                 <option value="最大">最大</option>
             </select>
         </div>
+
         <div>
             <strong>色</strong>
             <select id="colorSelect">
@@ -123,6 +127,7 @@
                 <option value="濃白">濃白</option>
             </select>
         </div>
+
         <div>
             <strong>頭</strong>
             <select id="headSelect">
@@ -135,6 +140,7 @@
                 <option value="たてまる">たてまる</option>
             </select>
         </div>
+
         <div>
             <strong>アンテナ</strong>
             <select id="antennaSelect">
@@ -177,11 +183,11 @@
                 <option value="3体土">3体土</option>
                 <option value="3体風">3体風</option>
                 <option value="3体氷">3体氷</option>
-                <option value="3体風">3体闇</option>
-                <option value="3体風">3体光</option>
-                
+                <option value="3体闇">3体闇</option>
+                <option value="3体光">3体光</option>
             </select>
         </div>
+
         <div>
             <strong>特徴</strong>
             <select id="featureSelect">
@@ -202,162 +208,136 @@
         </div>
     </div>
 
-    
+    <!-- QR保存ボタン -->
+    <button id="saveButton" onclick="saveQRCode()">QRコード画像を保存</button>
+    <div class="description" id="saveDescription" style="display:none;">※選択肢を押さなくても保存できます。</div>
 
-    <button id="saveButton" style="display: none;" onclick="saveQRCode()">QRコード画像を保存</button>
-    <div class="description" id="saveDescription" style="display: none;">※選択肢を押さなくても保存できます。</div>
-    <button id="physiqueTableButton" style="margin-top: 10px;" onclick="showPhysiqueTable()">体格表を表示</button>
-<button id="historyButton" style="margin-top: 10px; margin-left: 10px;" onclick="toggleHistory()">履歴を表示</button>
+    <!-- ボタン2つ -->
+    <button id="physiqueTableButton" style="margin-top:10px;" onclick="togglePhysiqueTable()">体格表を表示</button>
+    <button id="historyButton" style="margin-top:10px; margin-left:10px;" onclick="toggleHistory()">履歴を表示</button>
 
-<!-- 体格表 -->
-<div id="physiqueTableContainer" style="display: none; margin-top: 10px;">
-    <img id="physiqueTableImage"
-         src="https://github.com/chocomint024/DenpaQR/blob/main/%E4%BD%93%E6%A0%BC%E8%A1%A8.png?raw=true"
-         alt="体格表"
-         style="max-width: 100%; height: auto;">
-</div>
+    <!-- ★ 履歴削除ボタン -->
+    <button id="clearHistoryButton" style="margin-top:10px; margin-left:10px; display:none;" onclick="clearHistory()">
+        履歴を削除
+    </button>
 
-<!-- 履歴 -->
-<div id="historyContainer" style="display:none; margin-top: 10px;">
-    <h3>生成履歴</h3>
-    <div id="history"
-         style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:10px;">
+    <!-- 履歴 -->
+    <div id="historyContainer" style="display:none; margin-top:15px;">
+        <h3>生成履歴</h3>
+        <div id="history" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
     </div>
-</div>
+
+    <!-- 体格表 -->
+    <div id="physiqueTableContainer" style="display:none; margin-top:15px;">
+        <img id="physiqueTableImage"
+             src="https://github.com/chocomint024/DenpaQR/blob/main/%E4%BD%93%E6%A0%BC%E8%A1%A8.png?raw=true"
+             alt="体格表" style="max-width:100%; height:auto;">
+    </div>
 
 <script>
-    function showPhysiqueTable() {
-        var tableContainer = document.getElementById("physiqueTableContainer");
-        if (tableContainer.style.display === "none") {
-            tableContainer.style.display = "block";
-        } else {
-            tableContainer.style.display = "none";
-        }
+let qrCodeElement;
+let qrCodeCount = 0;
+
+// ★ 履歴専用カウンター
+let historyCount = 0;
+
+// QR生成
+function generateQRCode() {
+    const maxLength = parseInt(document.getElementById("stringLength").value);
+    if (isNaN(maxLength) || maxLength < 1 || maxLength > 493) {
+        alert("1〜493 の範囲で入力してください。");
+        return;
     }
-</script>
 
-
-    <script>
-        let qrCodeElement;
-        let qrCodeCount = 0; // QRコード生成回数をカウントする変数
-
-        function generateQRCode() {
-            // ユーザーが入力した文字列の長さを取得
-            const maxLength = parseInt(document.getElementById("stringLength").value);
-            if (isNaN(maxLength) || maxLength < 1 || maxLength > 493) {
-                alert("1から493の範囲で文字列の長さを入力してください。");
-                return;
-            }
-
-            // 最大lengthのランダムな文字列を生成
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let randomString = '';
-            for (let i = 0; i < maxLength; i++) {
-                randomString += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            
-            // QRコードエリアをクリア
-            document.getElementById("qrcode").innerHTML = "";
-            document.getElementById("generatedString").innerHTML = "";
-
-            // QRコードを生成
-            qrCodeElement = document.createElement("div");
-            const qrCodeSize = 400; // QRコードのサイズを固定
-            new QRCode(qrCodeElement, {
-                text: randomString,
-                width: qrCodeSize, // 幅を固定
-                height: qrCodeSize // 高さを固定
-            });
-            document.getElementById("qrcode").appendChild(qrCodeElement);
-
-            // QRコードに白い余白を追加するためのCanvasを作成
-            const canvas = qrCodeElement.querySelector("canvas");
-            if (canvas) {
-                const ctx = canvas.getContext("2d");
-                const whiteBorderSize = 30; // 白い余白のサイズ
-                const borderedCanvas = document.createElement("canvas");
-                borderedCanvas.width = qrCodeSize + whiteBorderSize * 2; // 余白を考慮した幅
-                borderedCanvas.height = qrCodeSize + whiteBorderSize * 2; // 余白を考慮した高さ
-                const borderedCtx = borderedCanvas.getContext("2d");
-
-                // 白い背景を描画
-                borderedCtx.fillStyle = "white";
-                borderedCtx.fillRect(0, 0, borderedCanvas.width, borderedCanvas.height);
-                // QRコードを中央に描画
-                borderedCtx.drawImage(canvas, whiteBorderSize, whiteBorderSize, qrCodeSize, qrCodeSize);
-
-                // 新しいCanvasをQRコードエリアに追加
-                qrCodeElement.innerHTML = ""; // 以前のQRコードをクリア
-                qrCodeElement.appendChild(borderedCanvas);
-            }
-
-            // 生成した文字列を表示
-            document.getElementById("generatedString").innerHTML = "生成した文字列: " + randomString;
-
-
-            // 保存ボタンを表示
-            document.getElementById("saveButton").style.display = "inline";
-            document.getElementById("saveDescription").style.display = "block"; // 説明文を表示
-
-            // 選択肢をリセット
-            document.getElementById("avoidanceSelect").selectedIndex = 0;
-            document.getElementById("physiqueSelect").selectedIndex = 0;
-            document.getElementById("colorSelect").selectedIndex = 0;
-            document.getElementById("headSelect").selectedIndex = 0;
-            document.getElementById("antennaSelect").selectedIndex = 0;
-            document.getElementById("featureSelect").selectedIndex = 0;
-
-            // QRコード生成回数を更新
-            qrCodeCount++;
-            document.getElementById("qrCount").innerText = "QRコード生成回数: " + qrCodeCount; // 回数を表示
-        }
-
-        function saveQRCode() {
-            const canvas = qrCodeElement.querySelector("canvas");
-            if (canvas) {
-                const imgSrc = canvas.toDataURL("image/png");
-                const link = document.createElement('a');
-
-                // セレクトボックスで選択された項目を取得してファイル名を生成
-                const selectedOptions = [
-                    document.getElementById("avoidanceSelect").value,
-                    document.getElementById("physiqueSelect").value,
-                    document.getElementById("colorSelect").value,
-                    document.getElementById("headSelect").value,
-                    document.getElementById("antennaSelect").value,
-                    document.getElementById("featureSelect").value
-                ].filter(option => option !== '').join('_'); // 空でない項目をアンダースコアで結合
-
-                link.download = selectedOptions ? `qrcode_${selectedOptions}.png` : "qrcode.png"; // デフォルトのファイル名
-
-                link.href = imgSrc;
-                document.body.appendChild(link);
-                link.click(); // 自動的にダウンロードを開始
-                document.body.removeChild(link); // リンクを削除
-            }
-        }
-
-// 履歴の表示切替
-function toggleHistory() {
-    const container = document.getElementById("historyContainer");
-
-    if (container.style.display === "none") {
-        container.style.display = "block";
-        document.getElementById("historyButton").innerText = "履歴を非表示";
-    } else {
-        container.style.display = "none";
-        document.getElementById("historyButton").innerText = "履歴を表示";
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let randomString = "";
+    for (let i = 0; i < maxLength; i++) {
+        randomString += chars.charAt(Math.floor(Math.random() * chars.length));
     }
+
+    document.getElementById("qrcode").innerHTML = "";
+    qrCodeElement = document.createElement("div");
+    document.getElementById("qrcode").appendChild(qrCodeElement);
+
+    const size = 400;
+
+    new QRCode(qrCodeElement, {
+        text: randomString,
+        width: size,
+        height: size
+    });
+
+    const original = qrCodeElement.querySelector("canvas");
+    const bordered = document.createElement("canvas");
+
+    const border = 30;
+    bordered.width = size + border * 2;
+    bordered.height = size + border * 2;
+
+    const ctx = bordered.getContext("2d");
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, bordered.width, bordered.height);
+    ctx.drawImage(original, border, border, size, size);
+
+    qrCodeElement.innerHTML = "";
+    qrCodeElement.appendChild(bordered);
+
+    document.getElementById("generatedString").innerHTML = "生成した文字列: " + randomString;
+    document.getElementById("saveButton").style.display = "inline";
+    document.getElementById("saveDescription").style.display = "block";
+
+    resetSelects();
+
+    // ★★ 履歴を追加（回数）
+    addHistory(bordered.toDataURL("image/png"));
+
+    qrCodeCount++;
+    document.getElementById("qrCount").innerText = "QRコード生成回数: " + qrCodeCount;
 }
 
-// 履歴に追加する処理
-function addHistory(imgSrc, text) {
-    const historyContainer = document.getElementById("history");
+// 選択肢リセット
+function resetSelects() {
+    avoidanceSelect.selectedIndex = 0;
+    physiqueSelect.selectedIndex = 0;
+    colorSelect.selectedIndex = 0;
+    headSelect.selectedIndex = 0;
+    antennaSelect.selectedIndex = 0;
+    featureSelect.selectedIndex = 0;
+}
 
-    const item = document.createElement("div");
-    item.style.border = "1px solid #ccc";
-    item.style.padding = "5px";
-    item.style.background = "white";
+// 保存
+function saveQRCode() {
+    const canvas = qrCodeElement.querySelector("canvas");
+    if (!canvas) return;
+
+    const imgSrc = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+
+    const selected = [
+        avoidanceSelect.value,
+        physiqueSelect.value,
+        colorSelect.value,
+        headSelect.value,
+        antennaSelect.value,
+        featureSelect.value
+    ].filter(v => v).join("_");
+
+    link.download = selected ? `qrcode_${selected}.png` : "qrcode.png";
+    link.href = imgSrc;
+    link.click();
+}
+
+// ★★ 履歴追加（回数表示）
+function addHistory(imgSrc) {
+    historyCount++;
+
+    const history = document.getElementById("history");
+
+    const box = document.createElement("div");
+    box.style.border = "1px solid #ccc";
+    box.style.padding = "5px";
+    box.style.background = "white";
+    box.style.textAlign = "center";
 
     const img = document.createElement("img");
     img.src = imgSrc;
@@ -367,24 +347,51 @@ function addHistory(imgSrc, text) {
     img.onclick = () => {
         const w = window.open("");
         w.document.write(`<img src="${imgSrc}" style="width:400px;">`);
-        w.document.title = "QRコード拡大表示";
+        w.document.title = `${historyCount}回目のQRコード`;
     };
 
     const label = document.createElement("div");
-    label.textContent = text;
-    label.style.fontSize = "10px";
-    label.style.wordBreak = "break-all";
+    label.innerText = `${historyCount}回目`;
+    label.style.fontSize = "12px";
 
-    item.appendChild(img);
-    item.appendChild(label);
-    historyContainer.appendChild(item);
+    box.appendChild(img);
+    box.appendChild(label);
+    history.appendChild(box);
+
+    // ★ 履歴があるときだけ削除ボタンを表示
+    document.getElementById("clearHistoryButton").style.display = "inline-block";
 }
 
-    </script>
+// ★★ 履歴削除
+function clearHistory() {
+    document.getElementById("history").innerHTML = "";
+    historyCount = 0;
+
+    // ボタンを隠す
+    document.getElementById("clearHistoryButton").style.display = "none";
+}
+
+// 履歴表示切換
+function toggleHistory() {
+    const c = document.getElementById("historyContainer");
+    c.style.display = c.style.display === "none" ? "block" : "none";
+    historyButton.innerText = c.style.display === "none" ? "履歴を表示" : "履歴を非表示";
+
+    // 開いたときだけ削除ボタンを出す
+    if (c.style.display === "block" && historyCount > 0) {
+        clearHistoryButton.style.display = "inline-block";
+    } else {
+        clearHistoryButton.style.display = "none";
+    }
+}
+
+// 体格表切換
+function togglePhysiqueTable() {
+    const c = document.getElementById("physiqueTableContainer");
+    c.style.display = c.style.display === "none" ? "block" : "none";
+    physiqueTableButton.innerText = c.style.display === "none" ? "体格表を表示" : "体格表を非表示";
+}
+</script>
+
 </body>
 </html>
-
-
-
-
-
