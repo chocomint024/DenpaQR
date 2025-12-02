@@ -293,7 +293,10 @@
 
             // 生成した文字列を表示
             document.getElementById("generatedString").innerHTML = "生成した文字列: " + randomString;
-            addHistory(borderedCanvas.toDataURL("image/png"), randomString);
+            if (borderedCanvas) {
+    addHistory(borderedCanvas.toDataURL("image/png"), randomString);
+}
+
 
             // 保存ボタンを表示
             document.getElementById("saveButton").style.display = "inline";
@@ -383,6 +386,7 @@ function addHistory(imgSrc, text) {
     </script>
 </body>
 </html>
+
 
 
 
