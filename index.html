@@ -60,7 +60,7 @@
     <h2>電波人間用QRコード自動生成ツール</h2>
     <input type="number" id="stringLength" placeholder="文字列の長さを入力 (1-493)" min="1" max="493" value="126" />
     <button onclick="generateQRCode()">QRコードを生成</button>
-    <div class="description">※126より大きい数だと湧く数は増えますがAndroidとiOSで個体が異なります。</div>
+    <div class="description">※ランダムでQRを生成します。意図的なQRは作れません。</div>
     
     <div id="qrcode"></div>
     <div id="generatedString"></div>
@@ -127,12 +127,12 @@
             <strong>頭</strong>
             <select id="headSelect">
                 <option value="">選択してください</option>
-                <option value="横楕円">横楕円</option>
-                <option value="石鹼">石鹼</option>
-                <option value="丸">丸</option>
-                <option value="三角">三角</option>
-                <option value="四角">四角</option>
-                <option value="縦楕円">縦楕円</option>
+                <option value="よこまる">よこまる</option>
+                <option value="かどまる">かどまる</option>
+                <option value="まる">まる</option>
+                <option value="さんかく">さんかく</option>
+                <option value="しかく">しかく</option>
+                <option value="たてまる">たてまる</option>
             </select>
         </div>
         <div>
@@ -196,6 +196,7 @@
                 <option value="目素材">目素材</option>
                 <option value="鼻素材">鼻素材</option>
                 <option value="口素材">口素材</option>
+                <option value="頬素材">頬素材</option>
                 <option value="顔色素材">顔色素材</option>
             </select>
         </div>
@@ -323,3 +324,4 @@
     </script>
 </body>
 </html>
+
