@@ -60,6 +60,15 @@
     <input type="number" id="stringLength" placeholder="文字列の長さ (1-493)" min="1" max="493" value="126">
     <button onclick="generateQRCode()">QRコードを生成</button>
 
+<!-- ▼ 自動生成機能 -->
+<div style="margin-top:15px;">
+    <input type="number" id="autoSec" placeholder="自動生成間隔(秒)" min="1" style="width:150px;">
+    <button onclick="startAutoGenerate()">自動生成開始</button>
+    <button onclick="stopAutoGenerate()">停止</button>
+    <div id="autoStatus" style="margin-top:5px; font-size:14px; color:green;"></div>
+</div>
+<!-- ▲ 自動生成機能 -->
+
     <div class="description">※ランダムでQRを生成します。意図的なQRは作れません。</div>
 
     <div id="qrcode"></div>
@@ -288,6 +297,7 @@ function generateQRCode() {
 
     resetSelects();
 
+
     // ★★ 履歴を追加（回数）
     addHistory(bordered.toDataURL("image/png"));
 
@@ -391,6 +401,39 @@ function togglePhysiqueTable() {
     c.style.display = c.style.display === "none" ? "block" : "none";
     physiqueTableButton.innerText = c.style.display === "none" ? "体格表を表示" : "体格表を非表示";
 }
+
+// ★ 自動生成用変数
+let autoTimer = null;
+
+// ★ 自動生成開始
+function startAutoGenerate() {
+    const sec = parseInt(document.getElementById("autoSec").value);
+
+    if (isNaN(sec) || sec < 1) {
+        alert("1秒以上を入力してください。");
+        return;
+    }
+
+    // すでに動いている場合はリセット
+    if (autoTimer) clearInterval(autoTimer);
+
+    autoTimer = setInterval(() => {
+        generateQRCode();
+    }, sec * 1000);
+
+    document.getElementById("autoStatus").innerText =
+        `${sec}秒ごとに自動生成中…`;
+}
+
+// ★ 自動生成停止
+function stopAutoGenerate() {
+    if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+    }
+    document.getElementById("autoStatus").innerText = "停止しました。";
+}
+
 </script>
 
 </body>
